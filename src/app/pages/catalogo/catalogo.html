@@ -1,0 +1,14 @@
+<p>Hoy es: {{ hoy | date:'EEEE d MMMM yyyy' }}</p>
+<h1>CATALOGO</h1>
+@for(producto of productos; track producto.id){
+<div>
+    <nav>
+        <li>Titulo: {{ producto.titulo | titlecase }}</li>
+        <li>Autor: {{ producto.autor | uppercase | slice:0:20 }}</li>
+        <li>Precio: {{ producto.precio | soles }}</li>
+        <li>Fecha publicación: {{ producto.fechaPubl | date:'dd/MM/yyyy' }}</li>
+        <li>Descripción: {{ producto.descripcion | lowercase | slice:0:80 }}</li>
+    </nav>
+    <a [routerLink]="['/catalogo',producto.id]">Ver detalle</a>
+</div>
+}

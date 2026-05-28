@@ -1,0 +1,69 @@
+
+<!-- 2. En el template, conecta el formulario con [formGroup]="form" y (ngSubmit)="enviar()". -->
+<form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+	<!-- 3. Para cada campo, muestra mensajes de error específicos usando @if con las condiciones campo.invalid && campo.touched. Usa form.get('nombre')?.errors?.['required'] para verificar el tipo de error. -->
+	<div class="mb-3">
+		<label>Nombre:</label>
+		<input type="text" formControlName="nombre" [ngClass]="{'is-valid': nombre?.valid && nombre?.touched, 'is-invalid': nombre?.invalid && nombre?.touched }" class="form-control">
+		@if(nombre?.invalid && nombre?.touched) {
+			<div class="invalid-feedback">
+				@if(nombre?.errors?.['required']) { El nombre es requerido } 
+				@if(nombre?.errors?.['minlength']) { Mínimo 3 caracteres }
+			</div>
+		}
+	</div>
+
+	<div class="mb-3">
+		<label>Correo:</label>
+		<input type="email" formControlName="correo" [ngClass]="{'is-valid': correo?.valid && correo?.touched, 'is-invalid': correo?.invalid && correo?.touched }" class="form-control">
+		@if(correo?.invalid && correo?.touched) {
+			<div class="invalid-feedback">
+				@if(correo?.errors?.['required']) { El correo es requerido }
+				@if(correo?.errors?.['email']) { Ingresa un correo válido }
+			</div>
+		}
+	</div>
+
+	<div class="mb-3">
+		<label>Teléfono:</label>
+		<input type="text" formControlName="telefono" [ngClass]="{'is-valid': telefono?.valid && telefono?.touched, 'is-invalid': telefono?.invalid && telefono?.touched }" class="form-control">
+		<!-- 4. El campo telefono es opcional — muestra el error de patrón solo si el usuario escribió algo y no coincide con el formato peruano (9 dígitos empezando en 9). -->
+		@if(telefono?.value && telefono?.invalid && telefono?.touched) {
+			<div class="invalid-feedback">
+				@if(telefono?.errors?.['pattern']) { Formato: 9XXXXXXXX (9 dígitos) }
+			</div>
+		}
+	</div>
+
+	<div class="mb-3">
+		<label>Asunto:</label>
+		<input type="text" formControlName="asunto" [ngClass]="{'is-valid': asunto?.valid && asunto?.touched, 'is-invalid': asunto?.invalid && asunto?.touched }" class="form-control">
+		@if(asunto?.invalid && asunto?.touched) {
+			<div class="invalid-feedback">
+				@if(asunto?.errors?.['required']) { El asunto es requerido }
+			</div>
+		}
+	</div>
+
+	<div class="mb-3">
+		<label>Mensaje:</label>
+		<textarea formControlName="mensaje" [ngClass]="{'is-valid': mensaje?.valid && mensaje?.touched, 'is-invalid': mensaje?.invalid && mensaje?.touched }" class="form-control"></textarea>
+		<!-- 6. Agrega un contador de caracteres para el campo mensaje: muestra '{{ form.get("mensaje")?.value?.length || 0 }} / 300'. -->
+		<div class="form-text">{{ mensaje?.value?.length || 0 }} / 300</div>
+		@if(mensaje?.invalid && mensaje?.touched) {
+			<div class="invalid-feedback">
+				@if(mensaje?.errors?.['required']) { El mensaje es requerido }
+				@if(mensaje?.errors?.['minlength']) { Mínimo 10 caracteres }
+				@if(mensaje?.errors?.['maxlength']) { Máximo 300 caracteres }
+			</div>
+		}
+	</div>
+
+	<!-- 7. Deshabilita el botón de envío con [disabled]="form.invalid". -->
+	<button type="submit" class="btn btn-primary" [disabled]="form.invalid">Enviar</button>
+</form>
+
+<!-- 5. Mensaje de confirmación tras envío exitoso -->
+@if(enviado) {
+	<div class="alert alert-success mt-3">Mensaje enviado correctamente</div>
+}
